@@ -11,9 +11,9 @@
 Допускаются предположения не описанные в задаче, оверкодинг.
 По завершению тестового задания, определитесь для себя,  сколько времени у вас ушло на выполнение задачи и сообщите нам. Использование ООП обязательно.
  **/
-
+//Trait to work with URL for several part our script
 trait UrlLib {
-
+    //Method works with URL witch have "200" http header response code
     public function urlExist(string $url) : bool  {
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             return false; //url no valid
@@ -24,7 +24,7 @@ trait UrlLib {
         }
         return true;
     }
-
+    //Method return html code form url or false
     public function htmlGet(string $url) :string|bool {
         if($this->urlExist($url)) {
             return file_get_contents($url);
@@ -32,11 +32,11 @@ trait UrlLib {
         return false;
     }
 }
-
+//Joint interface for view in page class
 interface View {
     public function viewModule(mixed $str) :string;
 }
-
+//Class with BizLogic
 class Logic {
     use UrlLib;//unclude method urlExist, htmlGet
 
@@ -56,9 +56,9 @@ class Logic {
         return $arr_tag;
     }
 }
-
+//Class for view logic in page
 class ViewLogic extends Logic implements View {
-
+    //Default interface view method
     public function viewModule(mixed $arr): string {
         $str = "";
         if(is_array($arr)) {
@@ -69,7 +69,7 @@ class ViewLogic extends Logic implements View {
         }
         return $str;
     }
-
+    //View method with tag quantities sort param
     public function viewModuleSort($arr,$sort_param = "DESC") :string {
         if($sort_param=="DESC") { arsort($arr); }
         else { asort($arr); }
@@ -81,12 +81,12 @@ class ViewLogic extends Logic implements View {
 
 ## Start Main part
 $url = "https://lenta.ru/";
-$logic = new Logic();
+$logic = new ViewLogic();
 $html = $logic->htmlGet($url);
 if($html === false) {
     die("url not correct or page not exist");
 }
-$tag_arr = $logic->htmlParse($html);
+$tag_arr = $logic->htmlParseTag($html);
 
 $view = new ViewLogic();
 echo $view->viewModuleSort($tag_arr, "DESC");

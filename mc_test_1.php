@@ -14,7 +14,7 @@ class Valid {
 
     function __construct(string $str){ return $this->str = $str; }
 
-    public function validS() {
+    public function validS() :string {
         if(!preg_match("~[\{\}]{1}~i", $this->str, $temp)) {
             return "Некорректный код"; //or return false;
         }
